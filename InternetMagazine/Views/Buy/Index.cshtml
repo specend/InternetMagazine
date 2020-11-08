@@ -1,0 +1,59 @@
+﻿@using InternetMagazine.Models
+@model IndexViewModel
+@{
+    ViewBag.Title = "Главная страница";
+
+}
+<h1>Каталог товаров</h1>
+<form method="get">
+    <div class="form-inline">
+        <label>Категория: </label>
+        <select name="category" asp-items="Model.FilterViewModel.Categories" class="form-control"></select>
+        <label>Тип сортировки:</label>
+        <select name="typeSort" class="form-control">
+            <option value="None">Отсутствует</option>
+            <option value="Asc">По возрастанию</option>
+            <option value="Desc">По убыванию</option>
+        </select>
+        <label>Сортировать по:</label>
+        <select name="attributeSort" class="form-control">
+            <option value="Name">По названию</option>
+            <option value="Price">По цене</option>
+        </select>
+        <input type="submit" value="Фильтр" class="btn btn-outline-dark" />
+    </div>
+</form>
+<table class="table">
+    @foreach (var item in Model.Products)
+    {
+    <tr>
+
+        <td>
+            @if (item.Image != null)
+            {
+            <a asp-action="AboutProduct" asp-controller="Buy" asp-route-id="@item.Id_Product">
+                <img width="80" height="80" src="data:image;base64,@System.Convert.ToBase64String(item.Image)" alt="" /></a>
+            }
+            <a asp-action="AboutProduct" asp-controller="Buy" asp-route-id="@item.Id_Product">@item.Name</a>
+        </td>
+        <td>@item.Price</td>
+        <td>@item.Count</td>
+        @if (item.Count > 0)
+        {
+            <td>
+                <form asp-action="AddInBasket" asp-controller="Buy" asp-route-id="@item.Id_Product">
+                    <div class="form-row">
+                        <input value="1" name="CountProduct" min="1" max="@item.Count" type="number" class="form-check" />
+                        <input type="submit" value="В корзину" />
+                    </div>
+                </form>
+            </td>
+        }
+        else
+        {
+            <td><label class="control-label">Нет в наличии</label></td>
+        }
+
+    </tr>
+    }
+</table>

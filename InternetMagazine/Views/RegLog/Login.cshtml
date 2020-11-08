@@ -1,0 +1,31 @@
+﻿@model InternetMagazine.Models.LoginViewModel
+
+<h2>Вход на сайт</h2>
+
+<a asp-action="Register" asp-controller="RegLog">Регистрация</a>
+
+
+<form asp-action="Login" asp-controller="RegLog" asp-antiforgery="true" method="post">
+    <div class="validation" asp-validation-summary="ModelOnly"/>
+    <div>
+        <div class="form-group">
+            <label asp-for="Login" class="control-label"></label>
+            <input asp-for="Login" class="form-control" />
+            <span asp-validation-for="Login" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control" type="password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <a asp-action="ForgotPassword" asp-controller="ChangeDate">Забыли пароль?</a>
+        <div>
+            <input asp-for="RememberMe" type="checkbox" />
+            <label asp-for="RememberMe" class="control-label"></label>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Войти" class="btn btn-outline-dark" />
+        </div>
+    </div>
+</form>
+

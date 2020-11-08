@@ -1,0 +1,13 @@
+﻿@model InternetMagazine.Models.WriteOfOrder
+@{
+    ViewData["Title"] = "Заказ готов";
+}
+
+<h1>Номер вашего заказа - @Model.IdentityNumber</h1>
+<label class="contol-label">Ваш заказ успешно оформлен и будет доставлен в ближайшее время!</label>
+<form asp-controller="Buy" asp-action="Index" method="post">
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Вернуться на главную"/>
+    </div>
+</form>
+

@@ -1,0 +1,15 @@
+﻿@model InternetMagazine.Models.Product
+@{
+    ViewData["Title"] = "AddInBasket";
+}
+
+<h1>Товар добавлен в корзину</h1>
+<form asp-action="addinbasket" asp-controller="buy">
+<div class="form-group">
+    <label name="CountProduct" class="control-label">Товар @Model.Name в количестве @ViewBag.CountProduct добавлен в корзину</label>
+</div>
+<div class="form-group">
+    <input type="submit" value="Вернуться на главную страницу" class="btn btn-primary" />
+</div>
+</form>
+

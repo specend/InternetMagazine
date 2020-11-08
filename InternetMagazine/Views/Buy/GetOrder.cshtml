@@ -1,0 +1,41 @@
+﻿@model InternetMagazine.Models.OrderViewModel
+@{
+    ViewData["Title"] = "GetOrder";
+}
+
+<h1>Оформление заказа</h1>
+<hr />
+<div class="row">
+    <div class="col-md-9">
+        <form asp-action="GetOrder">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TypeOfPay" class="control-label"></label>
+                <input type="radio" name="TypeOfPay" value="Наличные" />Наличные
+                <input type="radio" name="TypeOfPay" value="Банковская карта" />Банковская карта
+                <span asp-validation-for="TypeOfPay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TypeOfDelivery" class="control-label"></label>
+                <input type="radio" name="TypeOfDelivery" value="Почта" />Почта
+                <input type="radio" name="TypeOfDelivery" value="Курьерская доставка" />Курьерская доставка
+                <input type="radio" name="TypeOfDelivery" value="Самовывоз" />Самовывоз
+                <span asp-validation-for="TypeOfDelivery" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Оформить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

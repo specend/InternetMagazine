@@ -1,0 +1,47 @@
+﻿@model IEnumerable<InternetMagazine.Models.WriteOfOrder>
+@{
+    ViewBag.Title = "Заказы";
+    int sum;
+}
+
+<h1>Мои заказы</h1>
+@foreach (var id in Model)
+{
+<dl class="dl-horizontal">
+    <dt>Заказ @id.IdentityNumber</dt>
+    <dt>Время заказа: @id.DateOfOrder</dt>
+    <dt>Адрес заказа: @id.Address</dt>
+    <dt>Статус заказа: @id.StateOrder</dt>
+    <dt>Тип оплаты: @id.TypeOfPay</dt>
+    <dt>Тип доставки: @id.TypeOfDelivery</dt>
+    <dt>Дополнительная плата: @id.AdditionalCharges</dt>
+</dl>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название товара</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Стоимость</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in id.Orders)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Product.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Product.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.Count)</td>
+                <td>@Html.DisplayFor(modelItem => item.SummOrder)</td>
+            </tr>
+        } 
+    </tbody>
+ </table>
+ sum = id.Orders.Where(i => i.Id_Record == id.Id_record).Sum(i => i.SummOrder) + @id.AdditionalCharges;
+<label class="control-label">Итого: @sum</label>
+    @if (id.StateOrder != "Выполнен")
+    {
+      <a asp-action="DeleteOrder" asp-controller="Buy" asp-route-id="@id.Id_record">Отменить заказ</a>
+    }
+}
+

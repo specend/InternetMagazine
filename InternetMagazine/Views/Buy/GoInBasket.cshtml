@@ -1,0 +1,39 @@
+﻿@model IEnumerable<InternetMagazine.Models.Basket>
+@{
+    ViewBag.Title = "Корзина";
+}
+
+<h1>Моя корзина</h1>
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название товара</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Стоимость по количеству товара</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Product.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Product.Price)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Count)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SummOrder)</td>
+                    <td><a asp-action="DeleteFromBasket" asp-controller="Buy" asp-route-id="@item.Id_order">Удалить</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <label class="control-label">Итого: @Model.Sum(s => s.SummOrder)</label>
+    <a asp-controller="Buy" asp-action="GetOrder">Оформить заказ</a>
+}
+else
+{
+    <label class="control-label">Нет товаров в корзине</label>
+}
+
