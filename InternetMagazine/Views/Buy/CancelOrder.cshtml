@@ -1,0 +1,21 @@
+﻿@model InternetMagazine.Models.WriteOfOrder
+@{
+    ViewData["Title"] = "Отмена заказа";
+}
+
+<h1>Отменить заказ</h1>
+<label class="control-label">Вы действительно хотите отменить заказ под номером @Model.IdentityNumber?</label>
+<div class="row">
+    <form asp-controller="Buy" asp-action="CancelOrder" method="post">
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Да" />
+        </div>
+    </form>
+    <form asp-controller="Buy" asp-action="MyOrders">
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Нет" />
+        </div>
+    </form>
+</div>
+
+

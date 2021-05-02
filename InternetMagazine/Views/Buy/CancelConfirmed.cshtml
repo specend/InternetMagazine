@@ -1,0 +1,13 @@
+﻿@model InternetMagazine.Models.WriteOfOrder
+@{
+    ViewData["Title"] = "Заказ отменён";
+}
+
+<h1>Ваш заказ @Model.IdentityNumber был успешно отменён!</h1>
+<div class="row">
+    <form asp-controller="Buy" asp-action="MyOrders">
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Вернуться к заказам" />
+        </div>
+    </form>
+</div>

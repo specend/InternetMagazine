@@ -27,29 +27,35 @@
         <label class="control-label">Нет в наличии</label>
     }
 
-    @if (haveReview == null)
+    @if (haveReview == null && User.Identity.IsAuthenticated)
     {
-    <form asp-action="AddComment" asp-controller="Buy" asp-route-id="@Model.Id_Product" method="post">
-        <h5>Оставьте ваш отзыв:</h5>
-        <textarea name="comment"></textarea>
-        <div class="rating-area">
-            <input type="radio" id="star-5" name="rating" value="5">
-            <label for="star-5" title="Оценка «5»"></label>
-            <input type="radio" id="star-4" name="rating" value="4">
-            <label for="star-4" title="Оценка «4»"></label>
-            <input type="radio" id="star-3" name="rating" value="3">
-            <label for="star-3" title="Оценка «3»"></label>
-            <input type="radio" id="star-2" name="rating" value="2">
-            <label for="star-2" title="Оценка «2»"></label>
-            <input type="radio" id="star-1" name="rating" value="1">
-            <label for="star-1" title="Оценка «1»"></label>
-        </div>
-        <input type="submit" value="Добавить" />
-    </form>
+        <form asp-action="AddComment" asp-controller="Buy" asp-route-id="@Model.Id_Product" method="post">
+            <h5>Оставьте ваш отзыв:</h5>
+            <textarea name="comment"></textarea>
+            <div class="rating-area">
+                <input type="radio" id="star-5" name="rating" value="5">
+                <label for="star-5" title="Оценка «5»"></label>
+                <input type="radio" id="star-4" name="rating" value="4">
+                <label for="star-4" title="Оценка «4»"></label>
+                <input type="radio" id="star-3" name="rating" value="3">
+                <label for="star-3" title="Оценка «3»"></label>
+                <input type="radio" id="star-2" name="rating" value="2">
+                <label for="star-2" title="Оценка «2»"></label>
+                <input type="radio" id="star-1" name="rating" value="1">
+                <label for="star-1" title="Оценка «1»"></label>
+            </div>
+            <input type="submit" value="Добавить" />
+        </form>
     }
-    else
+    else if (haveReview != null && User.Identity.IsAuthenticated)
     {
-    <label class="control-label">@User.Identity.Name, вы уже оставляли отзыв по данному товару.</label>
+        <label class="control-label">@User.Identity.Name, вы уже оставляли отзыв по данному товару.</label>
+    }
+    else if (!User.Identity.IsAuthenticated)
+    {
+        <label class="control-label">Для того чтобы оставить отзыв, вам нужно 
+        <a asp-action="Login" asp-controller="RegLog"> войти в аккаунт</a> или 
+        <a asp-action="Register" asp-controller="RegLog"> зарегистрироваться</a>.</label>
     }
 
     <div class="comments">
@@ -57,20 +63,20 @@
         <ul class="media-left">
             @foreach (var item in Model.Reviews)
             {
-            <li class="media-left">
-                <div class="media-body">
-                    <div class="media-heading">
-                        <div class="author">@Html.DisplayFor(modelItem => item.Customer.Login)</div>
+                <li class="media-left">
+                    <div class="media-body">
+                        <div class="media-heading">
+                            <div class="author">@Html.DisplayFor(modelItem => item.Customer.Login)</div>
                             <div class="metadata">
                                 <span class="date">@item.DateOfWrite</span>
                                 <span class="text-black-50">Оценка: @item.Mark из 5</span>
                             </div>
-                        <div class="media-text text-justify">
-                            @item.Comment
+                            <div class="media-text text-justify">
+                                @item.Comment
+                            </div>
                         </div>
                     </div>
-                </div>
-            </li>
+                </li>
             }
         </ul>
     </div>

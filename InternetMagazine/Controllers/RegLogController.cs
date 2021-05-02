@@ -44,7 +44,11 @@ namespace InternetMagazine.Controllers
                     //else Properties.Resources.Remember = false;
 
                     await Authenticate(l.Login); //аутентификация
-                    
+
+                    customer.RememberMe = l.RememberMe;
+                    _cc.Update(customer);
+                    await _cc.SaveChangesAsync();
+
                     return RedirectToAction("Index", "Buy");
                 }
                 else ModelState.AddModelError("", "Некорректные логин или пароль");
@@ -100,7 +104,7 @@ namespace InternetMagazine.Controllers
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             //установка идентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-
+            
         }
 
 

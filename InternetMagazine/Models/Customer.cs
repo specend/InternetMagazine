@@ -50,6 +50,8 @@ namespace InternetMagazine.Models
         [Display(Name = "Подтверждение пароля")]
         public string ConfirmPassword { get; set; }
 
+        public bool RememberMe { get; set; }
+
         public List<Basket> Baskets { get; set; }
         public List<WriteOfOrder> WriteOfOrders { get; set; }
         public List<Review> Reviews { get; set; }

@@ -14,7 +14,6 @@ using System.IO.Pipes;
 
 namespace InternetMagazine.Controllers
 {
-    [Authorize]
     public class BuyController : Controller
     {
 
@@ -29,15 +28,24 @@ namespace InternetMagazine.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int? category, string name, string typeSort = "None", string attributeSort = "None")
         {
-            
-                foreach (var p in _db.Product)
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    Customer c = await _db.Customer.FirstOrDefaultAsync(cu => cu.Login == User.Identity.Name);
+            //    if (!c.RememberMe)
+            //    {
+            //        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            //    }
+
+            //}
+
+            foreach (var p in _db.Product)
+            {
+                if (p.NameImage != null)
                 {
-                    if (p.NameImage != null)
-                    {
-                        var bytes = System.IO.File.ReadAllBytes(p.NameImage);
-                        p.Image = bytes;
-                    }
+                    var bytes = System.IO.File.ReadAllBytes(p.NameImage);
+                    p.Image = bytes;
                 }
+            }
             await _db.SaveChangesAsync();
 
             IQueryable<Product> products = _db.Product.Include(c => c.Category);
@@ -67,6 +75,49 @@ namespace InternetMagazine.Controllers
             };
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [ActionName("CancelOrder")]
+        public async Task<IActionResult> ConfirmCancelOrder(int? id)
+        {
+            if (id != null)
+            {
+                WriteOfOrder wo = await _db.WriteOfOrder.Include(p => p.Orders).FirstOrDefaultAsync(p => p.Id_record == id);
+                if (wo != null)
+                    return View(wo);
+            }
+            return NotFound();
+        }
+
+
+        public async Task<IActionResult> CancelConfirmed(int? id)
+        {
+            if (id != null)
+            {
+                WriteOfOrder wo = await _db.WriteOfOrder.FirstOrDefaultAsync(p => p.Id_record == id);
+                if (wo != null)
+                    return View(wo);
+            }
+            return NotFound();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CancelOrder(int? id)
+        {
+            if (id != null)
+            {
+                WriteOfOrder wo = await _db.WriteOfOrder.Include(o => o.Orders).ThenInclude(p => p.Product).FirstOrDefaultAsync(o => o.Id_record == id);
+                wo.StateOrder = "Отменён";
+                foreach (Order order in wo.Orders)
+                {
+                    Product p = await _db.Product.FirstOrDefaultAsync(pr => pr.Id_Product == order.Id_product);
+                    p.Count += order.Count;
+                    _db.Product.Update(p);
+                }
+                await _db.SaveChangesAsync();
+                return RedirectToAction("CancelConfirmed", new { id = wo.Id_record});
+            }
+            return NotFound();
         }
 
         [HttpGet]
@@ -112,6 +163,7 @@ namespace InternetMagazine.Controllers
 
         public async Task<IActionResult> AddInBasket(int? id, int CountProduct)
         {
+            
             if (id != null)
             {
                 Product p  = await _db.Product.FirstOrDefaultAsync(pr => pr.Id_Product == id);
@@ -168,14 +220,17 @@ namespace InternetMagazine.Controllers
                 }
                 else
                 {
-                    _db.Basket.Add
-                    (new Basket()
+                    if (User.Identity.IsAuthenticated)
                     {
-                        Id_customer = c.Id_Customer,
-                        Id_product = p.Id_Product,
-                        Count = CountProduct,
-                        SummOrder = p.Price * CountProduct
-                    });
+                        _db.Basket.Add
+                        (new Basket()
+                        {
+                            Id_customer = c.Id_Customer,
+                            Id_product = p.Id_Product,
+                            Count = CountProduct,
+                            SummOrder = p.Price * CountProduct
+                        });
+                    }
                 }
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");

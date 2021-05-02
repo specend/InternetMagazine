@@ -39,9 +39,10 @@
  </table>
  sum = id.Orders.Where(i => i.Id_Record == id.Id_record).Sum(i => i.SummOrder) + @id.AdditionalCharges;
 <label class="control-label">Итого: @sum</label>
-    @if (id.StateOrder != "Выполнен")
+    @if (id.StateOrder == "В пути")
     {
-      <a asp-action="DeleteOrder" asp-controller="Buy" asp-route-id="@id.Id_record">Отменить заказ</a>
+      <a asp-action="CancelOrder" asp-controller="Buy" asp-route-id="@id.Id_record">Отменить заказ</a>
     }
+    else { <label></label> }
 }
 
